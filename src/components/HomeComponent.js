@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import Movies from './Movies';
-import NavBar from './NavBar';
 import Options from './Options';
 
 export default class HomeComponent extends Component {
@@ -29,7 +28,6 @@ export default class HomeComponent extends Component {
         console.log("I am render")
         return (
             <div>
-                <NavBar />
                 <div className="col-md-6 offset-2"><h2>All Movies  <span className="badge badge-pill badge-success">20</span></h2></div>
                 <br />
                 <Options />

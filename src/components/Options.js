@@ -5,8 +5,9 @@ export default class Options extends Component {
     render() {
         return (
             <div className="col-md-12" style={{ backgroundColor: '#ffc107', marginLeft: '-15xp' }}>
-                <h2>
-                    <span>List Filtering:</span>
+
+                <h2 style={{ textAlign: 'left', alignSelf: 'stretch', padding: '15px' }}>
+                    <span >List Filtering:</span>
                     <input type='text' placeholder='Title Search' ></input>
                     <span>Genre:</span>
 
