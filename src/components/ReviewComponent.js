@@ -15,7 +15,6 @@ export default class ReviewComponent extends Component {
 
     componentDidMount() {
         try {
-            debugger;
             const movieId = this.props.match.params.id
             this.setState({
                 error: '',
@@ -76,6 +75,14 @@ export default class ReviewComponent extends Component {
             return (
                 <div>
                     Loading Data!
+                </div>
+            )
+
+        }
+        else if (this.state.isLoading === false && this.state.reviews.length === 0) {
+            return (
+                <div>
+                    No review
                 </div>
             )
 

@@ -1,38 +1,137 @@
 import React, { Component } from 'react'
 import Movies from './Movies';
 import Options from './Options';
+import axios from 'axios'
+import { API_KEY, API_KEY_TEXT, Basic_Url, Image_URL, Movie_URL, Query, Search_URL } from '../Constants/Constants';
 
 export default class HomeComponent extends Component {
 
     constructor(props) {
         super(props);
         console.log("I am constructor")
-        this.state = { date: new Date() }
+
+        this.state = {
+            movies: [],
+            isLoading: false,
+            error: '',
+            languages: [
+                {
+                    name: 'All',
+                    code: '-1'
+                },
+                {
+                    name: 'English',
+                    code: 'en'
+                },
+                {
+                    name: 'Russian',
+                    code: 'ru'
+                }
+            ]
+        }
+
+        this.languageChagned = this.languageChagned.bind(this)
+        this.textSearch = this.textSearch.bind(this)
     }
 
-    tick() {
-        this.setState({
-            date: new Date()
-        })
+    languageChagned(language) {
+        if (language === '-1') {
+            this.defaultMovies()
+        }
+        else {
+            this.setState({
+                movies: []
+            })
+        }
+    }
+
+    textSearch(text) {
+        if (text === '') {
+            this.defaultMovies()
+        }
+        else {
+            this.nameSearchMovies(text);
+        }
     }
 
     componentDidMount() {
-        console.log("I am componentDidMount")
+        this.defaultMovies()
     }
 
-    componentWillUnmount() {
-        console.log("I am componentWillUnmount")
+    defaultMovies() {
+        try {
+            this.setState({
+                error: '',
+                isLoading: true,
+                movies: []
+            })
+            let url = Basic_Url + Movie_URL + '?' + API_KEY_TEXT + '=' + API_KEY
+            axios.get(url)
+                .then(response => {
+                    this.setState({
+                        error: '',
+                        isLoading: false,
+                        movies: response.data.results
+                    })
+                })
+                .catch(e => {
+                    this.setState({
+                        error: e,
+                        isLoading: false,
+                        movies: []
+                    })
+                })
+        }
+        catch (e) {
+            this.setState({
+                error: e,
+                isLoading: false,
+                movies: []
+            })
+        }
     }
 
+    nameSearchMovies(text) {
+        try {
+            this.setState({
+                error: '',
+                isLoading: true,
+                movies: []
+            })
+            
+            let url = Search_URL + '?' + API_KEY_TEXT + '=' + API_KEY + Query + text
+            axios.get(url)
+                .then(response => {
+                    this.setState({
+                        error: '',
+                        isLoading: false,
+                        movies: response.data.results
+                    })
+                })
+                .catch(e => {
+                    this.setState({
+                        error: e,
+                        isLoading: false,
+                        movies: []
+                    })
+                })
+        }
+        catch (e) {
+            this.setState({
+                error: e,
+                isLoading: false,
+                movies: []
+            })
+        }
+    }
+    
     render() {
-        console.log("I am render")
         return (
             <div>
                 <div className="col-md-6 offset-2"><h2>All Movies  <span className="badge badge-pill badge-success">20</span></h2></div>
                 <br />
-                <Options />
-
-                <Movies/>
+                <Options languagesOption={this.state.languages} languageChanged={this.languageChagned} textBaseSearch={this.textSearch} />
+                <Movies moviesList={this.state.movies} />
             </div>
         )
     }

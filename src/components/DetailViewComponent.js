@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { Button } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import axios from 'axios'
-import { API_KEY, API_KEY_TEXT, Basic_Url, Movie_URL } from '../Constants/Constants';
+import { API_KEY, API_KEY_TEXT, Basic_Url, Image_URL, Movie_URL } from '../Constants/Constants';
 
 export default class DetailViewComponent extends Component {
 
@@ -56,13 +56,13 @@ export default class DetailViewComponent extends Component {
                         <div style={{ backgroundColor: 'white', marginTop: '50px', marginLeft: '50px' }} className='col-sm-3'>
                             <a>
                                 <img width='100%' style={{ marginLeft: 'auto', marginRight: 'auto' }}
-                                    src='https://image.tmdb.org/t/p/w500//udDclJoHjfjb8Ekgsd4FDteOkCU.jpg' />
+                                    src={Image_URL + this.state.detail.poster_path} />
                             </a>
                         </div>
 
                         <div className='col-sm-6'>
                             <div style={{ backgroundColor: 'white', marginTop: '50px', textAlign: 'left' }}>
-                                <h2>{this.state.detail.original_title}</h2>
+                                <h2>{this.state.detail.title}</h2>
                                 <h4 style={{ textAlign: 'left' }}>Overview</h4>
                                 <p style={{ textAlign: 'left' }}>{this.state.detail.overview}</p>
                                 <ul style={{ marginTop: '10px' }} className="list-group list-group-horizontal">

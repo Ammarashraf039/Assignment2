@@ -1,72 +1,38 @@
 import React, { Component } from 'react'
-import { Redirect } from 'react-router-dom';
-import { useHistory } from 'react-router-dom';
 import { Link } from 'react-router-dom'
 import axios from 'axios'
-import { API_KEY, API_KEY_TEXT, Basic_Url, Movie_URL } from '../Constants/Constants';
+import { API_KEY, API_KEY_TEXT, Basic_Url, Image_URL, Movie_URL } from '../Constants/Constants';
 
 export default class Movies extends Component {
-
 
     constructor(props) {
         super(props);
         this.state = {
-            movies: [],
-            isLoading: false,
-            error: ''
+            movies: this.props.moviesList
         }
-
     }
 
-    componentDidMount() {
-        try {
-            this.setState({
-                error: '',
-                isLoading: true,
-                movies: []
-            })
-
-            let url = Basic_Url + Movie_URL + '?' + API_KEY_TEXT + '=' + API_KEY
-            axios.get(url)
-                .then(response => {
-                    this.setState({
-                        error: '',
-                        isLoading: false,
-                        movies: response.data.results
-                    })
-                })
-                .catch(e => {
-                    this.setState({
-                        error: e,
-                        isLoading: false,
-                        movies: []
-                    })
-                })
-        }
-        catch (e) {
-            this.setState({
-                error: e,
-                isLoading: false,
-                movies: []
-            })
-        }
+    componentWillReceiveProps(nextProps) {
+        this.setState({ movies: nextProps.moviesList })
     }
 
     render() {
-        if (this.state.error == '') {
+        let { isLoggedIn } = true;
+        if (this.state.movies.length > 0) {
             return (
-                <div className="row" style={{ backgroundColor: '#17a2b8', marginLeft: '-15xp', marginTop: '20px' }}>
+                <div className="row" style={{ backgroundColor: '#17a2b8', margin: '15xp' }}>
                     {this.state.movies.map((item, index) => (
-                        <div className='col-sm-3' key={index} >
+                        <div className='col-sm-3' key={index} style={{ margin: '15xp' }}>
                             <div style={{ backgroundColor: 'white' }}>
 
                                 <Link to={'/detail/' + item.id}>
-                                    {/* <img width='80%' style={{ marginLeft: 'auto', marginRight: 'auto' }} src={item.url} /> */}
+                                    <img width='80%' style={{ marginLeft: 'auto', marginRight: 'auto' }}
+                                        src={Image_URL + item.poster_path} />
 
-                                    <div>
+                                    <div >
                                         <h4>{item.title}</h4>
-                                        <p><span>{item.release_date}</span></p>
-                                        <p><span>{item.vote_average}</span></p>
+                                        <span >{item.release_date}</span>
+                                        <p>{item.vote_average}</p>
                                     </div>
                                 </Link>
                             </div>
@@ -77,9 +43,7 @@ export default class Movies extends Component {
         }
         else {
             return (
-                <div>
-                    {this.state.error}
-                </div>
+                <div>Please wait</div>
             )
         }
 
