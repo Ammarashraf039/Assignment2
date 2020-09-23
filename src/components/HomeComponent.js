@@ -39,9 +39,7 @@ export default class HomeComponent extends Component {
             this.defaultMovies()
         }
         else {
-            this.setState({
-                movies: []
-            })
+            this.defaultMovies()
         }
     }
 
