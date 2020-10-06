@@ -1,14 +1,15 @@
 import React, { Component } from 'react'
 import Movies from './Movies';
-import Options from './Options';
+import Options from './Options'
 import axios from 'axios'
 import { API_KEY, API_KEY_TEXT, Basic_Url, Image_URL, Movie_URL, Query, Search_URL } from '../Constants/Constants';
+
+const apiContext = React.createContext();
 
 export default class HomeComponent extends Component {
 
     constructor(props) {
         super(props);
-        console.log("I am constructor")
 
         this.state = {
             movies: [],
@@ -96,7 +97,7 @@ export default class HomeComponent extends Component {
                 isLoading: true,
                 movies: []
             })
-            
+
             let url = Search_URL + '?' + API_KEY_TEXT + '=' + API_KEY + Query + text
             axios.get(url)
                 .then(response => {
@@ -122,15 +123,27 @@ export default class HomeComponent extends Component {
             })
         }
     }
-    
+
     render() {
         return (
-            <div>
-                <div className="col-md-6 offset-2"><h2>All Movies  <span className="badge badge-pill badge-success">20</span></h2></div>
-                <br />
-                <Options languagesOption={this.state.languages} languageChanged={this.languageChagned} textBaseSearch={this.textSearch} />
-                <Movies moviesList={this.state.movies} />
-            </div>
+            // {
+            //     languagesOption: this.state.languages
+            // }
+            <apiContext.Provider value={{
+                languageOptions: this.state.languages
+                ,languageChanged: this.languageChagned
+                ,textBaseSearch : this.textSearch
+                ,moviesList:this.state.movies
+            }}>
+                <div>
+                    <div className="col-md-6 offset-2"><h2>All Movies  <span className="badge badge-pill badge-success">20</span></h2></div>
+                    <br />
+                    <Options />
+                    <Movies />
+                </div>
+            </apiContext.Provider>
         )
     }
 }
+
+export { apiContext }
