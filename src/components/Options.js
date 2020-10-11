@@ -52,7 +52,6 @@ const Options = function (props) {
                             }
                         </select>
 
-
                     </h2>
                 </div>
                 );
