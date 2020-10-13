@@ -7,10 +7,11 @@ const FavouriteMovies = (props) => {
     const favouriteMoviesContext = useContext(FavouriteMoviesContext)
     console.log(favouriteMoviesContext)
     return (
-        <div>
-            {favouriteMoviesContext.movies.map((item, index) => (
-                <MovieCard position={index} movie={item} />
-            ))}
+        <div style={{margin:'20px'}}>
+            <div className="row" style={{ backgroundColor: '#17a2b8', margin: '15xp' }}>
+                {favouriteMoviesContext.movies.map((item, index) => (
+                    <MovieCard key={item.id} movie={item} />))}
+            </div>
         </div>
     )
 

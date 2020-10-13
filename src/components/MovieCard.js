@@ -1,10 +1,10 @@
-import React, {  useContext } from 'react'
+import React, { useContext } from 'react'
 import { Link } from 'react-router-dom'
 import { Image_URL } from '../Constants/Constants';
-import {FavouriteMoviesContext} from '../App'
+import { FavouriteMoviesContext } from '../App'
 
 function isMovieMarkedFavourite(moivesList, newMovie) {
-    if (moivesList == undefined) {
+    if (moivesList === undefined) {
         return false;
     }
     return moivesList.some(x => x.id === newMovie.id)
@@ -14,11 +14,11 @@ const MovieCard = (props) => {
     const favouriteMoviesContext = useContext(FavouriteMoviesContext)
 
     return (
-        <div className='col-sm-3' key={props.position} style={{ margin: '15xp' }}>
+        <div className='col-sm-3' style={{ margin: '15xp' }}>
             <div style={{ backgroundColor: 'white' }}>
 
                 <Link to={'/detail/' + props.movie.id}>
-                    <img width='80%' style={{ marginLeft: 'auto', marginRight: 'auto' }}
+                    <img alt={props.movie.title} width='80%' style={{ marginLeft: 'auto', marginRight: 'auto' }}
                         src={Image_URL + props.movie.poster_path} />
 
                     <div >

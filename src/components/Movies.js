@@ -17,7 +17,7 @@ const Movies = (props) => {
                     return (
                         <div className="row" style={{ backgroundColor: '#17a2b8', margin: '15xp' }}>
                             {data.moviesList.map((item, index) => (
-                                <MovieCard movie={item} position={index}/>
+                                <MovieCard key={item.id} movie={item} />
                                ))}
                         </div>
                     )
