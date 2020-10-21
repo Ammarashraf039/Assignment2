@@ -3,17 +3,20 @@ import Movies from './Movies';
 import Options from './Options'
 import axios from 'axios'
 import { API_KEY, API_KEY_TEXT, Basic_Url, Image_URL, Movie_URL, Query, Search_URL } from '../Constants/Constants';
-
+import { GetMoviesRequest, GetTextMoviesRequest } from '../Actions/ActionCall'
+import { connect } from 'react-redux'
 
 
 const apiContext = React.createContext();
 
 const HomeComponent = (props) => {
 
+
+
     const [movies, setMovies] = useState([])
 
-    const[textToSearch, setTextToSearch]=useState('')
-    
+    const [textToSearch, setTextToSearch] = useState('')
+
     const languages = [
         {
             name: 'All',
@@ -30,42 +33,23 @@ const HomeComponent = (props) => {
     ];
 
     useEffect(() => {
-        const url = Basic_Url + Movie_URL + '?' + API_KEY_TEXT + '=' + API_KEY
-        axios.get(url)
-            .then(response => {
-                setMovies(response.data.results)
-            })
-            .catch(e => {
-                setMovies([])
-            })
-    }, [])
+        setMovies(props.movies)
+    }, [props.movies])
+
+
 
     useEffect(() => {
-        const url = Basic_Url + Movie_URL + '?' + API_KEY_TEXT + '=' + API_KEY
         if (textToSearch == '') {
-            axios.get(url)
-                .then(response => {
-                    setMovies(response.data.results)
-                })
-                .catch(e => {
-                    setMovies([])
-                })
+            props.GetMoviesRequest()
         }
         else {
-            let url = Search_URL + '?' + API_KEY_TEXT + '=' + API_KEY + Query + textToSearch
-            axios.get(url)
-                .then(response => {
-                    setMovies(response.data.results)
-                })
-                .catch(e => {
-                    setMovies([])
-                })
+            props.GetTextMoviesRequest(textToSearch)
         }
 
 
     }, [textToSearch])
 
-    const memoizedCallback = (text)=>{
+    const memoizedCallback = (text) => {
         setTextToSearch(text)
     }
 
@@ -87,145 +71,17 @@ const HomeComponent = (props) => {
 
 }
 
-class HomeComponents extends Component {
-
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            movies: [],
-            isLoading: false,
-            error: '',
-            textToSearch: '',
-            languages: [
-                {
-                    name: 'All',
-                    code: '-1'
-                },
-                {
-                    name: 'English',
-                    code: 'en'
-                },
-                {
-                    name: 'Russian',
-                    code: 'ru'
-                }
-            ]
-        }
-
-        this.languageChagned = this.languageChagned.bind(this)
-        this.textSearch = this.textSearch.bind(this)
+const mapStateToProps = (state) => {
+    if (state.movies != undefined && state.movies.payload != undefined) {
+        console.log(state.movies.payload);
+        return { movies: state.movies.payload }
     }
 
-    languageChagned(language) {
-        if (language === '-1') {
-            this.defaultMovies()
-        }
-        else {
-            this.defaultMovies()
-        }
-    }
-
-
-    textSearch(text) {
-        if (text === '') {
-            this.defaultMovies()
-        }
-        else {
-            this.nameSearchMovies(text);
-        }
-    }
-
-    componentDidMount() {
-        this.defaultMovies()
-    }
-
-    defaultMovies() {
-        try {
-            this.setState({
-                error: '',
-                isLoading: true,
-                movies: []
-            })
-            let url = Basic_Url + Movie_URL + '?' + API_KEY_TEXT + '=' + API_KEY
-            axios.get(url)
-                .then(response => {
-                    this.setState({
-                        error: '',
-                        isLoading: false,
-                        movies: response.data.results
-                    })
-                })
-                .catch(e => {
-                    this.setState({
-                        error: e,
-                        isLoading: false,
-                        movies: []
-                    })
-                })
-        }
-        catch (e) {
-            this.setState({
-                error: e,
-                isLoading: false,
-                movies: []
-            })
-        }
-    }
-
-    nameSearchMovies(text) {
-        try {
-            this.setState({
-                error: '',
-                isLoading: true,
-                movies: []
-            })
-
-            let url = Search_URL + '?' + API_KEY_TEXT + '=' + API_KEY + Query + text
-            axios.get(url)
-                .then(response => {
-                    this.setState({
-                        error: '',
-                        isLoading: false,
-                        movies: response.data.results
-                    })
-                })
-                .catch(e => {
-                    this.setState({
-                        error: e,
-                        isLoading: false,
-                        movies: []
-                    })
-                })
-        }
-        catch (e) {
-            this.setState({
-                error: e,
-                isLoading: false,
-                movies: []
-            })
-        }
-    }
-
-    render() {
-        return (
-            <apiContext.Provider value={{
-                languageOptions: this.state.languages
-                , languageChanged: this.languageChagned
-                , textBaseSearch: this.textSearch
-                , moviesList: this.state.movies
-            }}>
-                <div>
-                    <div className="col-md-6 offset-2"><h2>All Movies  <span className="badge badge-pill badge-success">20</span></h2></div>
-                    <br />
-                    <Options />
-                    <Movies />
-                </div>
-            </apiContext.Provider>
-        )
-    }
+    return { movies: [] }
 }
 
-export default HomeComponent;
+export default connect(mapStateToProps, {
+    GetMoviesRequest, GetTextMoviesRequest
+})(HomeComponent);
 
 export { apiContext }

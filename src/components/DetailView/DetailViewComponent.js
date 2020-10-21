@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { Button } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import axios from 'axios'
-import { API_KEY, API_KEY_TEXT, Basic_Url, Image_URL, Movie_URL } from '../Constants/Constants';
+import { API_KEY, API_KEY_TEXT, Basic_Url, Image_URL, Movie_URL } from '../../Constants/Constants';
 
 export default class DetailViewComponent extends Component {
 

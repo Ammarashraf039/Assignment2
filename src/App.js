@@ -1,16 +1,23 @@
-import React, { createContext, useState, useCallback } from 'react';
+import React, { createContext, useState,useEffect, useCallback } from 'react';
 import './App.css';
 import HomeComponent from './components/HomeComponent';
-import DetailViewComponent from './components/DetailViewComponent';
+import DetailViewComponent from './components/DetailView/DetailViewComponent';
 import ReviewComponent from './components/ReviewComponent';
 import { BrowserRouter, Switch, Route } from "react-router-dom";
 import NavBar from './components/NavBar'
-import FavouriteMovies from './components/FavouriteMovies'
+import FavouriteMovies from './components/FavouriteMoviesComponent'
+import { AddMovieRequest, AddMovieResponse } from './Actions/ActionCall'
+import { connect } from 'react-redux'
+
 export const FavouriteMoviesContext = createContext([]);
 
-function App() {
+function App(props) {
 
   const [favouriteMovies, setFavouriteMovies] = useState([]);
+
+  useEffect(() => {
+    setFavouriteMovies(props.favouriteMovies)
+}, [props.favouriteMovies])
 
   const setFavouriteMoviesFunction = useCallback((movie) => {
     if (favouriteMovies != undefined) {
@@ -19,8 +26,7 @@ function App() {
         console.log('already in list');
       }
       else {
-        setFavouriteMovies([...favouriteMovies, movie]);
-        console.log(movie)
+        props.AddMovieRequest(movie)
       }
     }
   }, [favouriteMovies])
@@ -29,8 +35,8 @@ function App() {
     <div className="App">
 
       <BrowserRouter>
-      
-      <NavBar />
+
+        <NavBar />
         <Switch>
           <Route path='/reviews/:id' render={(props) => <ReviewComponent {...props} />} />
           <Route path='/detail/:id' render={(props) => <DetailViewComponent {...props} />} />
@@ -38,7 +44,7 @@ function App() {
             <Route path='/' exact>
               <HomeComponent />
             </Route>
-            
+
             <Route path="/favourites" exact component={FavouriteMovies}></Route>
           </FavouriteMoviesContext.Provider>
         </Switch>
@@ -47,4 +53,14 @@ function App() {
   );
 }
 
-export default App;
+const mapStateToProps = (state) => {
+  if (state.favouriteMovies != undefined) {
+    return { favouriteMovies: state.favouriteMovies }
+  }
+
+  return { favouriteMovies: [] }
+}
+
+export default connect(mapStateToProps, {
+  AddMovieRequest, AddMovieResponse
+})(App);
